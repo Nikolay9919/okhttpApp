@@ -1,4 +1,4 @@
-package com.nikolay.okhttpapp
+package com.nikolay.okhttpapp.Models
 
 
 data class Repo(var id: Long, var name: String) {

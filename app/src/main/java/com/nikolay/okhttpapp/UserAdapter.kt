@@ -7,10 +7,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
+import com.nikolay.okhttpapp.Models.User
 import kotlinx.android.synthetic.main.item_user.view.*
 
-class UserAdapter(private val userList: List<User>, private val listener: (User) -> Unit) :
+
+class UserAdapter(private var userList: Array<User>, private val listener: (User) -> Unit) :
     RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
+
     override fun getItemCount(): Int {
         Log.d("size", userList.size.toString())
         return userList.size
@@ -28,9 +31,9 @@ class UserAdapter(private val userList: List<User>, private val listener: (User)
     }
 
 
+
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         fun bind(user: User, listener: (User) -> Unit) = with(itemView) {
-
             Log.d("userAdapter", user.toString())
             user_login.text = user.actor.login
             user_type.text = user.repo.name + " , " + user.type
