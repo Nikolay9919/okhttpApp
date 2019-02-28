@@ -15,7 +15,7 @@ class FeedReaderDbHelper(context: Context) :
     override fun onCreate(db: SQLiteDatabase?) {
 
         db?.execSQL(FeedReaderContract.SQL_CREATE_ENTRIES_URL)
-        db?.execSQL(FeedReaderContract.SQL_CREATE_TRIGGER_MAX_VALUE)
+        db?.execSQL(FeedReaderContract.SQL_INSERT_INTO_TABLE)
 
 
     }
