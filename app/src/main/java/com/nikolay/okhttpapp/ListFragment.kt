@@ -42,7 +42,7 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         swipeRefreshLayout.post {
             run {
                 swipeRefreshLayout.isRefreshing = true
-                get(url)
+                fetchJson(url)
             }
         }
 
@@ -50,11 +50,11 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        get(url)
+        fetchJson(url)
     }
 
     @SuppressLint("ShowToast")
-    fun get(url: String): Array<User> {
+    fun fetchJson(url: String): Array<User> {
 
         client = OkHttpClient()
         var userList: Array<User> = arrayOf()
@@ -68,6 +68,7 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 override fun onFailure(call: Call, e: IOException) {
                     Log.d("Failure Connection to ", url)
                     swipeRefreshLayout.isRefreshing = false
+                    activity!!.onBackPressed()
                 }
 
                 override fun onResponse(call: Call, response: Response) {

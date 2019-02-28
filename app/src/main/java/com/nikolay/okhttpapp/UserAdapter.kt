@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import com.bumptech.glide.Glide
 import com.nikolay.okhttpapp.Models.User
 import kotlinx.android.synthetic.main.item_user.view.*
@@ -16,7 +17,12 @@ class UserAdapter(private var userList: Array<User>, private val listener: (User
 
     override fun getItemCount(): Int {
         Log.d("size", userList.size.toString())
-        return userList.size
+        return if (userList.size > 50) {
+            50
+        } else {
+            userList.size
+        }
+
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
@@ -25,11 +31,17 @@ class UserAdapter(private var userList: Array<User>, private val listener: (User
         return UserViewHolder(rootView)
     }
 
+    private fun setAnimation(viewToAnimate: View) {
+        if (viewToAnimate.animation == null) {
+            val animation = AnimationUtils.loadAnimation(viewToAnimate.context, android.R.anim.slide_in_left)
+            viewToAnimate.animation = animation
+        }
+    }
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         holder.bind(userList[position], listener)
+        setAnimation(holder.itemView)
     }
-
 
 
     class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {

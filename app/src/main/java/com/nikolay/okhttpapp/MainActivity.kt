@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import com.nikolay.okhttpapp.SQLite.FeedReaderDbHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
@@ -17,26 +18,31 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
     }
 
     @SuppressLint("CommitTransaction")
     override fun onResume() {
         super.onResume()
+        val dbHelper = FeedReaderDbHelper(applicationContext)
+        dbHelper.getAllTasks()?.let { it1 -> recentList.addAll(it1) }
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
+        edit_text_url.setAdapter(adapter)
 
-
-            button_run.setOnClickListener {
-                if (edit_text_url.text.isEmpty()) {
-                    button_run.isClickable = false
-                } else {
+        button_run.setOnClickListener {
+            if (edit_text_url.text.isEmpty()) {
+                button_run.isClickable = false
+            } else {
                 val bundle = Bundle()
-                recentList.add(edit_text_url.text.toString())
-                val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
-                edit_text_url.setAdapter(adapter)
+
+                dbHelper.addTask(edit_text_url.text.toString())
+
                 bundle.putString("url", edit_text_url.text.toString())
                 val fragment = ListFragment()
                 fragment.arguments = bundle
                 val transaction = manager.beginTransaction()
-                transaction.replace(R.id.fragment_container, fragment)
+                transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
+                transaction.add(R.id.fragment_container, fragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
                 button_run.visibility = View.GONE
