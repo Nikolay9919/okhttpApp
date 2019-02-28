@@ -1,5 +1,6 @@
 package com.nikolay.okhttpapp
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.support.v4.app.Fragment
@@ -10,7 +11,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.URLUtil
+import android.widget.Toast
 import com.google.gson.GsonBuilder
+import com.google.gson.JsonSyntaxException
 import com.nikolay.okhttpapp.Models.User
 import okhttp3.*
 import java.io.IOException
@@ -49,40 +53,53 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         get(url)
     }
 
+    @SuppressLint("ShowToast")
     fun get(url: String): Array<User> {
 
         client = OkHttpClient()
         var userList: Array<User> = arrayOf()
-        val json = GsonBuilder().create()
-        val request = Request.Builder()
-            .url(url)
-            .build()
-        client.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                Log.d("Failure Connection to ", url)
-                swipeRefreshLayout.isRefreshing = false
-            }
+        if (URLUtil.isValidUrl(url)) {
 
-            override fun onResponse(call: Call, response: Response) {
-
-                val body = response.body()?.string()
-                userList = json.fromJson(body, Array<User>::class.java)
-                Log.d("response", userList.toString())
-                activity!!.runOnUiThread {
-                    val adapter = UserAdapter(userList)
-                    {
-                        Log.d("user", it.toString())
-                    }
-                    recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
-                    recyclerView.adapter = adapter
-                    adapter.notifyDataSetChanged()
+            val json = GsonBuilder().create()
+            val request = Request.Builder()
+                .url(url)
+                .build()
+            client.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    Log.d("Failure Connection to ", url)
+                    swipeRefreshLayout.isRefreshing = false
                 }
-                swipeRefreshLayout.isRefreshing = false
 
-                Log.d("userList", userList.toString())
-            }
-        })
+                override fun onResponse(call: Call, response: Response) {
 
+                    val body = response.body()?.string()
+                    try {
+                        userList = json.fromJson(body, Array<User>::class.java)
+                        Log.d("response", userList.toString())
+                        activity!!.runOnUiThread {
+                            val adapter = UserAdapter(userList)
+                            {
+                                Log.d("user", it.toString())
+                            }
+                            recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
+                            recyclerView.adapter = adapter
+                            adapter.notifyDataSetChanged()
+                        }
+                        swipeRefreshLayout.isRefreshing = false
+
+                        Log.d("userList", userList.toString())
+                    } catch (exception: JsonSyntaxException) {
+                        activity!!.runOnUiThread {
+                            Toast.makeText(activity!!.applicationContext, exception.toString(), Toast.LENGTH_SHORT)
+                            activity!!.onBackPressed()
+                        }
+
+                    }
+
+
+                }
+            })
+        }
         return userList
     }
 }
