@@ -22,8 +22,6 @@ import java.io.IOException
 class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
-    private val userList = ArrayList<User>()
-
     lateinit var swipeRefreshLayout: SwipeRefreshLayout
     lateinit var recyclerView: RecyclerView
     var url: String = ""
@@ -80,7 +78,17 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         activity!!.runOnUiThread {
                             val adapter = UserAdapter(userList)
                             {
-                                Log.d("user", it.toString())
+                                val bundle = Bundle()
+
+
+                                bundle.putString("actorId", it.actor.login)
+                                val fragment = ActorDetailsFragment()
+                                fragment.arguments = bundle
+                                val transaction = activity!!.supportFragmentManager.beginTransaction()
+                                transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
+                                transaction.replace(R.id.fragment_container, fragment)
+                                transaction.addToBackStack(null)
+                                transaction.commit()
                             }
                             recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
                             recyclerView.adapter = adapter

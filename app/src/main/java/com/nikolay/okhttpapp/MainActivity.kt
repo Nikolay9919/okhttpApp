@@ -7,14 +7,14 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
-import com.nikolay.okhttpapp.SQLite.FeedReaderDbHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
 
-    private var recentList: ArrayList<String> = arrayListOf()
+    private var recentList: ArrayList<String> = ArrayList(3)
     private val manager = supportFragmentManager
+    private val urlKey = "URL"
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -24,19 +24,24 @@ class MainActivity : AppCompatActivity() {
     @SuppressLint("CommitTransaction")
     override fun onResume() {
         super.onResume()
-        val dbHelper = FeedReaderDbHelper(applicationContext)
-        dbHelper.getAllTasks()?.let { it1 -> recentList.addAll(it1) }
+        val sharedPreferencesHelper = SharedPreferencesHelper()
+
+        recentList.addAll(sharedPreferencesHelper[applicationContext])
+        Log.d("sharedGet", sharedPreferencesHelper[applicationContext].toString())
+
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
         edit_text_url.setAdapter(adapter)
 
+
         button_run.setOnClickListener {
             if (edit_text_url.text.isEmpty()) {
-                button_run.isClickable = false
+                return@setOnClickListener
             } else {
                 val bundle = Bundle()
-
-                dbHelper.addTask(edit_text_url.text.toString())
-
+                if (edit_text_url.text.toString() != sharedPreferencesHelper[applicationContext].toString()) {
+                    sharedPreferencesHelper.put(applicationContext, urlKey, edit_text_url.text.toString())
+                }
+                Log.d("sharedPref", sharedPreferencesHelper[applicationContext].toString())
                 bundle.putString("url", edit_text_url.text.toString())
                 val fragment = ListFragment()
                 fragment.arguments = bundle
@@ -57,6 +62,13 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.popBackStack()
         edit_text_url.visibility = View.VISIBLE
         button_run.visibility = View.VISIBLE
+        val sharedPreferencesHelper = SharedPreferencesHelper()
+        recentList.addAll(sharedPreferencesHelper[applicationContext])
+        Log.d("sharedGet", sharedPreferencesHelper[applicationContext].toString())
+
+        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
+        edit_text_url.setAdapter(adapter)
+
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
