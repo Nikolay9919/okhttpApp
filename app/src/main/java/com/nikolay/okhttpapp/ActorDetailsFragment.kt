@@ -67,8 +67,8 @@ class ActorDetailsFragment : Fragment() {
                                 .into(avatar_url)
                             login.text = "Login     :" + actorDetails.login
                             email.text = "Email     :" + actorDetails.email
-                            public_repos.text = "Public Repos   :"+ actorDetails.public_repos
-                            public_gists.text = "Public Gists  :"+ actorDetails.public_gists
+                            public_repos.text = "Public Repos   :" + actorDetails.public_repos
+                            public_gists.text = "Public Gists  :" + actorDetails.public_gists
                             followers.text = "Followers     :" + actorDetails.followers.toString()
                             followings.text = "Following    :" + actorDetails.following.toString()
                             created_at.text = "Created At   :" + actorDetails.created_at

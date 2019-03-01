@@ -2,7 +2,6 @@ package com.nikolay.okhttpapp
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.widget.Toast
 
 
 class SharedPreferencesHelper {
@@ -23,11 +22,8 @@ class SharedPreferencesHelper {
         val map = sp.all as Map<String, String>
         val list = ArrayList<String>()
         for (entry in map.entries) {
-
-
             val savedPref = sp.getString(entry.key, "")
             list += savedPref
-            Toast.makeText(context, savedPref, Toast.LENGTH_LONG).show()
         }
         return list
 
