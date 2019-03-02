@@ -14,21 +14,27 @@ class MainActivity : AppCompatActivity() {
 
     private var recentList: ArrayList<String> = ArrayList(3)
     private val manager = supportFragmentManager
-    private val urlKey = "URL"
+    private val urlKey1 = "URL_1"
+    private val urlKey2 = "URL_2"
+    private val urlKey3 = "URL_3"
+    private val urlKeysList: ArrayList<String> = arrayListOf(urlKey1, urlKey2, urlKey3)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
     }
 
+    private val sharedPreferencesHelper = SharedPreferencesHelper()
     @SuppressLint("CommitTransaction")
     override fun onResume() {
         super.onResume()
-        val sharedPreferencesHelper = SharedPreferencesHelper()
-
-        recentList.addAll(sharedPreferencesHelper[applicationContext])
-        Log.d("sharedGet", sharedPreferencesHelper[applicationContext].toString())
-
+        if (sharedPreferencesHelper[applicationContext, urlKey1] != null)
+            recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
+        if (sharedPreferencesHelper[applicationContext, urlKey2] != null)
+            recentList.add(sharedPreferencesHelper[applicationContext, urlKey2]!!)
+        if (sharedPreferencesHelper[applicationContext, urlKey3] != null)
+            recentList.add(sharedPreferencesHelper[applicationContext, urlKey3]!!)
+        Log.d("mainRecentList", recentList.toString())
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
         edit_text_url.setAdapter(adapter)
 
@@ -38,10 +44,13 @@ class MainActivity : AppCompatActivity() {
                 return@setOnClickListener
             } else {
                 val bundle = Bundle()
-                if (edit_text_url.text.toString() != sharedPreferencesHelper[applicationContext].toString()) {
-                    sharedPreferencesHelper.put(applicationContext, urlKey, edit_text_url.text.toString())
-                }
-                Log.d("sharedPref", sharedPreferencesHelper[applicationContext].toString())
+                if (edit_text_url.text.toString() !in recentList)
+                    sharedPreferencesHelper.put(
+                        applicationContext,
+                        urlKeysList[recentList.size],
+                        edit_text_url.text.toString()
+                    )
+
                 bundle.putString("url", edit_text_url.text.toString())
                 val fragment = ListFragment()
                 fragment.arguments = bundle
@@ -50,6 +59,7 @@ class MainActivity : AppCompatActivity() {
                 transaction.add(R.id.fragment_container, fragment)
                 transaction.addToBackStack(null)
                 transaction.commit()
+
                 button_run.visibility = View.GONE
                 edit_text_url.visibility = View.GONE
             }
@@ -62,13 +72,11 @@ class MainActivity : AppCompatActivity() {
         supportFragmentManager.popBackStack()
         edit_text_url.visibility = View.VISIBLE
         button_run.visibility = View.VISIBLE
-        val sharedPreferencesHelper = SharedPreferencesHelper()
-        recentList.addAll(sharedPreferencesHelper[applicationContext])
-        Log.d("sharedGet", sharedPreferencesHelper[applicationContext].toString())
-
-        val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
-        edit_text_url.setAdapter(adapter)
-
+        when {
+            sharedPreferencesHelper[applicationContext, urlKey1] != null -> recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
+            sharedPreferencesHelper[applicationContext, urlKey2] != null -> recentList.add(sharedPreferencesHelper[applicationContext, urlKey2]!!)
+            sharedPreferencesHelper[applicationContext, urlKey3] != null -> recentList.add(sharedPreferencesHelper[applicationContext, urlKey3]!!)
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {

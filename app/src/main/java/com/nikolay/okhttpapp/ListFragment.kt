@@ -111,4 +111,9 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
         return userList
     }
+
+    override fun onStop() {
+        super.onStop()
+        activity!!.supportFragmentManager.popBackStack()
+    }
 }

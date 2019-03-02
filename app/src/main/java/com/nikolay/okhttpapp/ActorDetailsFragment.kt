@@ -29,9 +29,7 @@ class ActorDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val actor: ActorDetails = (fetchJson(actorId))
-
-
+        fetchJson(actorId)
         return inflater.inflate(R.layout.fragment_user, container, false)
     }
 
@@ -89,5 +87,10 @@ class ActorDetailsFragment : Fragment() {
             })
         }
         return actorDetails
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity!!.onBackPressed()
     }
 }

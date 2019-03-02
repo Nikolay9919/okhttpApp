@@ -2,6 +2,7 @@ package com.nikolay.okhttpapp
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Log
 
 
 class SharedPreferencesHelper {
@@ -11,21 +12,15 @@ class SharedPreferencesHelper {
     fun put(context: Context, key: String, value: String) {
         val sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
         val editor = sp.edit()
-
         editor.putString(key, value)
         editor.apply()
     }
 
-    operator fun get(context: Context): ArrayList<String> {
+    operator fun get(context: Context, key: String): String? {
 
         val sp = context.getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE)
-        val map = sp.all as Map<String, String>
-        val list = ArrayList<String>()
-        for (entry in map.entries) {
-            val savedPref = sp.getString(entry.key, "")
-            list += savedPref
-        }
-        return list
+        Log.d("spGet", sp.all.toString())
+        return sp.getString(key, null)
 
     }
 
