@@ -50,6 +50,13 @@ class MainActivity : AppCompatActivity() {
                         urlKeysList[recentList.size],
                         edit_text_url.text.toString()
                     )
+                else if (recentList.size == 3) {
+                    sharedPreferencesHelper.put(
+                        applicationContext,
+                        urlKeysList[1],
+                        edit_text_url.text.toString()
+                    )
+                }
 
                 bundle.putString("url", edit_text_url.text.toString())
                 val fragment = ListFragment()
