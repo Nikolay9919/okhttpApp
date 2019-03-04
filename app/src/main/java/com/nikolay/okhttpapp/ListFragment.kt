@@ -87,7 +87,7 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                                 val transaction = activity!!.supportFragmentManager.beginTransaction()
                                 transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
                                 transaction.replace(R.id.fragment_container, fragment)
-                                transaction.addToBackStack(null)
+                                transaction.addToBackStack("ActorDetailsFragment")
                                 transaction.commit()
                             }
                             recyclerView.layoutManager = LinearLayoutManager(activity!!.applicationContext)
@@ -112,8 +112,4 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         return userList
     }
 
-    override fun onStop() {
-        super.onStop()
-        activity!!.supportFragmentManager.popBackStack()
-    }
 }

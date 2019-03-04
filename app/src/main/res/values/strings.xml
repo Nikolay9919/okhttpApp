@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">okhttpApp</string>
+    <string name="loginDetails">Login :</string>
+    <string name="emailDetails">Email :</string>
+    <string name="publicReposDetails">Public Repos :</string>
+    <string name="PublicGistsDetails">Public Gists :</string>
+    <string name="FollowersDetails">Followers :</string>
+    <string name="FollowingDetails">Following :</string>
+    <string name="CreatedAtDetails">Created At :</string>
+    <string name="UpdatedAtDetails">Updated At :</string>
 </resources>

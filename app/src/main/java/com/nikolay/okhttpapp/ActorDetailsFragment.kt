@@ -63,14 +63,14 @@ class ActorDetailsFragment : Fragment() {
                             Glide.with(activity!!.applicationContext)
                                 .load(Uri.parse(actorDetails.avatar_url))
                                 .into(avatar_url)
-                            login.text = "Login     :" + actorDetails.login
-                            email.text = "Email     :" + actorDetails.email
-                            public_repos.text = "Public Repos   :" + actorDetails.public_repos
-                            public_gists.text = "Public Gists  :" + actorDetails.public_gists
-                            followers.text = "Followers     :" + actorDetails.followers.toString()
-                            followings.text = "Following    :" + actorDetails.following.toString()
-                            created_at.text = "Created At   :" + actorDetails.created_at
-                            updated_at.text = "Updated At   :" + actorDetails.updated_at
+                            login.text = getString(R.string.loginDetails) + actorDetails.login
+                            email.text = getString(R.string.emailDetails) + actorDetails.email
+                            public_repos.text = getString(R.string.publicReposDetails) + actorDetails.public_repos
+                            public_gists.text = getString(R.string.PublicGistsDetails) + actorDetails.public_gists
+                            followers.text = getString(R.string.FollowersDetails) + actorDetails.followers.toString()
+                            followings.text = getString(R.string.FollowingDetails) + actorDetails.following.toString()
+                            created_at.text = getString(R.string.CreatedAtDetails) + actorDetails.created_at
+                            updated_at.text = getString(R.string.UpdatedAtDetails) + actorDetails.updated_at
 
                         }
 
@@ -89,8 +89,5 @@ class ActorDetailsFragment : Fragment() {
         return actorDetails
     }
 
-    override fun onStop() {
-        super.onStop()
-        activity!!.onBackPressed()
-    }
+
 }

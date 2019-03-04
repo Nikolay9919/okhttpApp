@@ -2,7 +2,6 @@ package com.nikolay.okhttpapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
@@ -64,8 +63,8 @@ class MainActivity : AppCompatActivity() {
                 val transaction = manager.beginTransaction()
                 transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
                 transaction.add(R.id.fragment_container, fragment)
-                transaction.addToBackStack(null)
-                transaction.commit()
+
+                transaction.commitNow()
 
                 button_run.visibility = View.GONE
                 edit_text_url.visibility = View.GONE
@@ -75,31 +74,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        super.onBackPressed()
-        supportFragmentManager.popBackStack()
-        edit_text_url.visibility = View.VISIBLE
-        button_run.visibility = View.VISIBLE
-        when {
-            sharedPreferencesHelper[applicationContext, urlKey1] != null -> recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
-            sharedPreferencesHelper[applicationContext, urlKey2] != null -> recentList.add(sharedPreferencesHelper[applicationContext, urlKey2]!!)
-            sharedPreferencesHelper[applicationContext, urlKey3] != null -> recentList.add(sharedPreferencesHelper[applicationContext, urlKey3]!!)
-        }
+        if (supportFragmentManager.backStackEntryCount > 0) {
+
+            supportFragmentManager.popBackStackImmediate()
+            edit_text_url.visibility = View.VISIBLE
+            button_run.visibility = View.VISIBLE
+        } else
+            super.onBackPressed()
     }
 
-    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
-        super.onSaveInstanceState(outState, outPersistentState)
-        val recentListSaved: ArrayList<String> = recentList
-        outState!!.putStringArrayList("recentList", recentListSaved)
-        if (recentListSaved.isEmpty()) {
-            Log.d("EmptySavedState:", recentListSaved.toString())
-        } else {
-            Log.d("SavedState:", recentListSaved.toString())
-        }
-    }
-
-    override fun onRestoreInstanceState(savedInstanceState: Bundle?) {
-        super.onRestoreInstanceState(savedInstanceState)
-        recentList = savedInstanceState?.getStringArrayList("recentList")!!
-
-    }
 }
