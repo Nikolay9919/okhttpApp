@@ -7,6 +7,7 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import com.nikolay.okhttpapp.Fragments.ListFragment
 import com.nikolay.okhttpapp.Helpers.SharedPreferencesHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -26,23 +27,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-
     @SuppressLint("CommitTransaction")
     override fun onResume() {
-
         super.onResume()
-
-        if (sharedPreferencesHelper[applicationContext, urlKey1] != null)
-            recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
-        if (sharedPreferencesHelper[applicationContext, urlKey2] != null)
-            recentList.add(sharedPreferencesHelper[applicationContext, urlKey2]!!)
-        if (sharedPreferencesHelper[applicationContext, urlKey3] != null)
-            recentList.add(sharedPreferencesHelper[applicationContext, urlKey3]!!)
+        checkSharedAndList()
         Log.d("mainRecentList", recentList.toString())
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
         edit_text_url.setAdapter(adapter)
         initButton()
-
+        val editText = findViewById<AutoCompleteTextView>(R.id.edit_text_url)
+        editText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) edit_text_url.showDropDown() }
     }
 
     private fun initButton() {
@@ -64,7 +58,6 @@ class MainActivity : AppCompatActivity() {
                         edit_text_url.text.toString()
                     )
                 }
-
 
             }
             runFragment()
@@ -88,6 +81,15 @@ class MainActivity : AppCompatActivity() {
     } // run List Fragment
 
 
+    private fun checkSharedAndList() {
+        if (sharedPreferencesHelper[applicationContext, urlKey1] != null)
+            recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
+        if (sharedPreferencesHelper[applicationContext, urlKey2] != null)
+            recentList.add(sharedPreferencesHelper[applicationContext, urlKey2]!!)
+        if (sharedPreferencesHelper[applicationContext, urlKey3] != null)
+            recentList.add(sharedPreferencesHelper[applicationContext, urlKey3]!!)
+    } // compare shared preferences and list
+
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
         when (keyCode) {
             KeyEvent.KEYCODE_ENTER -> {
@@ -98,5 +100,4 @@ class MainActivity : AppCompatActivity() {
         return super.onKeyUp(keyCode, event)
 
     }
-
 }
