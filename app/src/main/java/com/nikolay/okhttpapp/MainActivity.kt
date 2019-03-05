@@ -5,7 +5,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.AutoCompleteTextView
 import com.nikolay.okhttpapp.Fragments.ListFragment
 import com.nikolay.okhttpapp.Helpers.SharedPreferencesHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -40,13 +42,16 @@ class MainActivity : AppCompatActivity() {
         Log.d("mainRecentList", recentList.toString())
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
         edit_text_url.setAdapter(adapter)
+        initButton()
 
+    }
 
+    private fun initButton() {
         button_run.setOnClickListener {
             if (edit_text_url.text.isEmpty()) {
                 return@setOnClickListener
             } else {
-                val bundle = Bundle()
+
                 if (edit_text_url.text.toString() !in recentList)
                     sharedPreferencesHelper.put(
                         applicationContext,
@@ -61,20 +66,26 @@ class MainActivity : AppCompatActivity() {
                     )
                 }
 
-                bundle.putString("url", edit_text_url.text.toString())
-                val fragment = ListFragment()
-                fragment.arguments = bundle
-                val transaction = manager.beginTransaction()
-                transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
-                transaction.replace(R.id.fragment_container, fragment, "ListFragment")
-
-                transaction.addToBackStack("ListFragment")
-                transaction.commit()
-                button_run.visibility = View.INVISIBLE
 
             }
+            runFragment()
 
         }
+    }
+
+    private fun runFragment() {
+        val bundle = Bundle()
+        bundle.putString("url", edit_text_url.text.toString())
+        val fragment = ListFragment()
+        fragment.arguments = bundle
+        val transaction = manager.beginTransaction()
+        transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
+        transaction.replace(R.id.fragment_container, fragment, "ListFragment")
+
+        transaction.addToBackStack("ListFragment")
+        transaction.commit()
+        button_run.visibility = View.INVISIBLE
+
     }
 
 
