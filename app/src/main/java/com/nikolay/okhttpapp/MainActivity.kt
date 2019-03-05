@@ -4,10 +4,9 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.KeyEvent
 import android.view.View
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import com.nikolay.okhttpapp.Fragments.ListFragment
 import com.nikolay.okhttpapp.Helpers.SharedPreferencesHelper
 import kotlinx.android.synthetic.main.activity_main.*
@@ -88,5 +87,16 @@ class MainActivity : AppCompatActivity() {
 
     }
 
+
+    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
+        when (keyCode) {
+            KeyEvent.KEYCODE_ENTER -> {
+                runFragment()
+                return true
+            }
+        }
+        return super.onKeyUp(keyCode, event)
+
+    }
 
 }
