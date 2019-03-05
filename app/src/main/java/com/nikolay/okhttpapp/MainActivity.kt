@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import com.nikolay.okhttpapp.Fragments.ListFragment
@@ -37,6 +38,21 @@ class MainActivity : AppCompatActivity() {
         initButton()
         val editText = findViewById<AutoCompleteTextView>(R.id.edit_text_url)
         editText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) edit_text_url.showDropDown() }
+        editText.setOnEditorActionListener { v, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
+                runFragment()
+                true
+            } else false
+        }
+        /*
+        editText.setOnKeyListener { v, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                runFragment()
+                return@setOnKeyListener true
+            }
+            return@setOnKeyListener false
+
+        }*/
     }
 
     private fun initButton() {
@@ -91,13 +107,19 @@ class MainActivity : AppCompatActivity() {
     } // compare shared preferences and list
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        when (keyCode) {
-            KeyEvent.KEYCODE_ENTER -> {
+        if (event != null) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) {
+                Log.d("onKeyUp", KeyEvent.KEYCODE_ENTER.toString())
                 runFragment()
                 return true
             }
         }
+
         return super.onKeyUp(keyCode, event)
 
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        return super.onKeyDown(keyCode, event)
     }
 }
