@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
-import android.view.KeyEvent
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
@@ -36,23 +35,8 @@ class MainActivity : AppCompatActivity() {
         val adapter = ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line, recentList)
         edit_text_url.setAdapter(adapter)
         initButton()
-        val editText = findViewById<AutoCompleteTextView>(R.id.edit_text_url)
-        editText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) edit_text_url.showDropDown() }
-        editText.setOnEditorActionListener { v, actionId, event ->
-            if (actionId == EditorInfo.IME_ACTION_GO) {
-                runFragment()
-                true
-            } else false
-        }
-        /*
-        editText.setOnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                runFragment()
-                return@setOnKeyListener true
-            }
-            return@setOnKeyListener false
+        initTextView()
 
-        }*/
     }
 
     private fun initButton() {
@@ -96,7 +80,6 @@ class MainActivity : AppCompatActivity() {
 
     } // run List Fragment
 
-
     private fun checkSharedAndList() {
         if (sharedPreferencesHelper[applicationContext, urlKey1] != null)
             recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
@@ -106,20 +89,14 @@ class MainActivity : AppCompatActivity() {
             recentList.add(sharedPreferencesHelper[applicationContext, urlKey3]!!)
     } // compare shared preferences and list
 
-    override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
-        if (event != null) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER) {
-                Log.d("onKeyUp", KeyEvent.KEYCODE_ENTER.toString())
+    private fun initTextView() {
+        val editText = findViewById<AutoCompleteTextView>(R.id.edit_text_url)
+        editText.setOnFocusChangeListener { _, hasFocus -> if (hasFocus) edit_text_url.showDropDown() }
+        editText.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_GO) {
                 runFragment()
-                return true
-            }
+                true
+            } else false
         }
-
-        return super.onKeyUp(keyCode, event)
-
-    }
-
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        return super.onKeyDown(keyCode, event)
     }
 }
