@@ -6,11 +6,13 @@ import android.support.v7.app.AppCompatActivity
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import com.nikolay.okhttpapp.Fragments.ListFragment
+import com.nikolay.okhttpapp.Helpers.SharedPreferencesHelper
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-
+    private val sharedPreferencesHelper = SharedPreferencesHelper()
     private var recentList: ArrayList<String> = ArrayList(3)
     private val manager = supportFragmentManager
     private val urlKey1 = "URL_1"
@@ -23,10 +25,12 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    private val sharedPreferencesHelper = SharedPreferencesHelper()
+
     @SuppressLint("CommitTransaction")
     override fun onResume() {
+
         super.onResume()
+
         if (sharedPreferencesHelper[applicationContext, urlKey1] != null)
             recentList.add(sharedPreferencesHelper[applicationContext, urlKey1]!!)
         if (sharedPreferencesHelper[applicationContext, urlKey2] != null)
@@ -62,25 +66,16 @@ class MainActivity : AppCompatActivity() {
                 fragment.arguments = bundle
                 val transaction = manager.beginTransaction()
                 transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
-                transaction.add(R.id.fragment_container, fragment)
+                transaction.replace(R.id.fragment_container, fragment, "ListFragment")
 
-                transaction.commitNow()
+                transaction.addToBackStack("ListFragment")
+                transaction.commit()
+                button_run.visibility = View.INVISIBLE
 
-                button_run.visibility = View.GONE
-                edit_text_url.visibility = View.GONE
             }
 
         }
     }
 
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-
-            supportFragmentManager.popBackStackImmediate()
-            edit_text_url.visibility = View.VISIBLE
-            button_run.visibility = View.VISIBLE
-        } else
-            super.onBackPressed()
-    }
 
 }

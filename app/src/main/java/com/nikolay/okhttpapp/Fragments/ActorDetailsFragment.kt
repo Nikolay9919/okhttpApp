@@ -1,4 +1,4 @@
-package com.nikolay.okhttpapp
+package com.nikolay.okhttpapp.Fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
 import com.nikolay.okhttpapp.Models.ActorDetails
+import com.nikolay.okhttpapp.R
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_user.*
 import okhttp3.*
 import java.io.IOException
@@ -29,13 +31,14 @@ class ActorDetailsFragment : Fragment() {
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        fetchJson(actorId)
+        jsonToView(actorId)
+
         return inflater.inflate(R.layout.fragment_user, container, false)
     }
 
 
-    private fun fetchJson(userLogin: String): ActorDetails {
-
+    private fun jsonToView(userLogin: String): ActorDetails {
+        activity!!.button_run.visibility = View.INVISIBLE
         val url = "https://api.github.com/users/$userLogin"
         Log.d("url", url)
         client = OkHttpClient()

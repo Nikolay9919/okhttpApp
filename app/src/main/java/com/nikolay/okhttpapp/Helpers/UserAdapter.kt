@@ -1,4 +1,4 @@
-package com.nikolay.okhttpapp
+package com.nikolay.okhttpapp.Helpers
 
 import android.net.Uri
 import android.support.v7.widget.RecyclerView
@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import com.bumptech.glide.Glide
 import com.nikolay.okhttpapp.Models.User
+import com.nikolay.okhttpapp.R
 import kotlinx.android.synthetic.main.item_user.view.*
 
 

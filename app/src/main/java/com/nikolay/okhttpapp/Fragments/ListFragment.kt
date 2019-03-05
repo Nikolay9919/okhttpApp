@@ -1,4 +1,4 @@
-package com.nikolay.okhttpapp
+package com.nikolay.okhttpapp.Fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,7 +15,10 @@ import android.webkit.URLUtil
 import android.widget.Toast
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonSyntaxException
+import com.nikolay.okhttpapp.Helpers.UserAdapter
 import com.nikolay.okhttpapp.Models.User
+import com.nikolay.okhttpapp.R
+import kotlinx.android.synthetic.main.activity_main.*
 import okhttp3.*
 import java.io.IOException
 
@@ -40,7 +43,7 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         swipeRefreshLayout.post {
             run {
                 swipeRefreshLayout.isRefreshing = true
-                fetchJson(url)
+                jsonToView(url)
             }
         }
 
@@ -48,11 +51,11 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        fetchJson(url)
+        jsonToView(url)
     }
 
     @SuppressLint("ShowToast")
-    fun fetchJson(url: String): Array<User> {
+    fun jsonToView(url: String): Array<User> {
 
         client = OkHttpClient()
         var userList: Array<User> = arrayOf()
@@ -85,7 +88,10 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                                 val fragment = ActorDetailsFragment()
                                 fragment.arguments = bundle
                                 val transaction = activity!!.supportFragmentManager.beginTransaction()
-                                transaction.setCustomAnimations(R.anim.enter_from_righr, R.anim.exit_to_left)
+                                transaction.setCustomAnimations(
+                                    R.anim.enter_from_righr,
+                                    R.anim.exit_to_left
+                                )
                                 transaction.replace(R.id.fragment_container, fragment)
                                 transaction.addToBackStack("ActorDetailsFragment")
                                 transaction.commit()
@@ -100,7 +106,6 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     } catch (exception: JsonSyntaxException) {
                         activity!!.runOnUiThread {
                             Toast.makeText(activity!!.applicationContext, exception.toString(), Toast.LENGTH_SHORT)
-                            activity!!.onBackPressed()
                         }
 
                     }
@@ -110,6 +115,11 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             })
         }
         return userList
+    }
+
+    override fun onStop() {
+        super.onStop()
+        activity!!.button_run.visibility = View.VISIBLE
     }
 
 }
