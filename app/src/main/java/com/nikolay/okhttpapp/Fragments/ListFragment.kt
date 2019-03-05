@@ -115,7 +115,7 @@ class ListFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             })
         }
         return userList
-    }
+    } // fetching json an adding him to recycler view
 
     override fun onStop() {
         super.onStop()

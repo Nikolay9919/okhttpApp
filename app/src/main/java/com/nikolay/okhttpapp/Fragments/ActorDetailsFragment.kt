@@ -90,7 +90,7 @@ class ActorDetailsFragment : Fragment() {
             })
         }
         return actorDetails
-    }
+    } // fetching Json and adding him to view
 
 
 }

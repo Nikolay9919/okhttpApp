@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             runFragment()
 
         }
-    }
+    } // init Button run
 
     private fun runFragment() {
         val bundle = Bundle()
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
         transaction.commit()
         button_run.visibility = View.INVISIBLE
 
-    }
+    } // run List Fragment
 
 
     override fun onKeyUp(keyCode: Int, event: KeyEvent?): Boolean {
