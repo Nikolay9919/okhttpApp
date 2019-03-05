@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">okhttpApp</string>
+    <string name="loginDetails">Логин :</string>
+    <string name="emailDetails">Електронна Поща :</string>
+    <string name="publicReposDetails">Публични репо :</string>
+    <string name="PublicGistsDetails">Публични звуци :</string>
+    <string name="FollowersDetails">последователи :</string>
+    <string name="FollowingDetails">Following :</string>
+    <string name="CreatedAtDetails">Създаден в :</string>
+    <string name="UpdatedAtDetails">Актуализирано на :</string>
+</resources>
